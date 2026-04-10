@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  segmentation-api:
+    build: .
+    image: ${DOCKERHUB_USERNAME:-eliasc2004}/${DOCKERHUB_REPO:-segmentation-api}:latest
+    ports:
+      - "5001:5000"
+    # Secrets are injected from the .env file – never hard-coded here.
+    env_file:
+      - .env
+    volumes:
+      # Mount trained model checkpoint from host; avoids baking weights into image.
+      - ./checkpoints:/app/checkpoints:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
