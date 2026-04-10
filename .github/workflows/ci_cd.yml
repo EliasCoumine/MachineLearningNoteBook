@@ -2,9 +2,9 @@ name: CI / CD – Segmentation API
 
 on:
   push:
-    branches: [main]
+    branches: [main, lab2-segmentation]
   pull_request:
-    branches: [main]
+    branches: [main, lab2-segmentation]
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/segmentation-api
@@ -73,7 +73,7 @@ jobs:
     name: Push to Docker Hub
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout code
